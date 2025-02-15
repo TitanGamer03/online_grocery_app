@@ -19,7 +19,7 @@ class CartScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = cart.items[index];
                 return ListTile(
-                  leading: Icon(item.icon),
+                  leading: Image.asset(item.image),
                   title: Text(item.name),
                   subtitle: Text("₹${item.price}"),
                   trailing: IconButton(

@@ -9,16 +9,43 @@ void main() {
 class Product {
   final String name;
   final int price;
-  final IconData icon;
+  final String image; // Image path for assets
   int quantity;
 
   Product({
     required this.name,
     required this.price,
-    required this.icon,
+    required this.image,
     this.quantity = 0,
   });
 }
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => CartModel(),
+      child: Consumer<CartModel>(
+        builder: (context, cart, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: cart.isDarkTheme ? ThemeData.dark() : ThemeData(
+              primarySwatch: Colors.green,
+              scaffoldBackgroundColor: Colors.grey[200],
+              appBarTheme: AppBarTheme(
+                backgroundColor: Colors.green,
+                elevation: 0,
+                titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+            home: HomeScreen(),
+          );
+        },
+      ),
+    );
+  }
+}
+
 
 class CartModel extends ChangeNotifier {
   final List<Product> _items = [];
@@ -71,34 +98,6 @@ class CartModel extends ChangeNotifier {
 
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => CartModel(),
-      child: Consumer<CartModel>(
-        builder: (context, cart, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: cart.isDarkTheme
-                ? ThemeData.dark()
-                : ThemeData(
-              primarySwatch: Colors.green,
-              scaffoldBackgroundColor: Colors.grey[200],
-              appBarTheme: AppBarTheme(
-                backgroundColor: Colors.green,
-                elevation: 0,
-                titleTextStyle: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            ),
-            home: HomeScreen(),
-          );
-        },
-      ),
-    );
-  }
-}
 
 class OrderDetailsScreen extends StatelessWidget {
   final List<Product> order;
@@ -118,7 +117,8 @@ class OrderDetailsScreen extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: order.map((product) => ListTile(
-                  leading: Icon(product.icon),
+                  // leading: Image.asset(AssetImage(product.image) as String),
+                  leading: Image.asset(product.image, fit: BoxFit.cover),
                   title: Text(product.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   trailing: Text("₹${product.price}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 )).toList(),
@@ -143,26 +143,26 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   final List<Product> products = [
-    Product(name: "Apple", price: 30, icon: Icons.apple),
-    Product(name: "Banana", price: 10, icon: Icons.eco),
-    Product(name: "Carrot", price: 20, icon: Icons.restaurant),
-    Product(name: "Tomato", price: 25, icon: Icons.local_pizza),
-    Product(name: "Potato", price: 15, icon: Icons.eco),
-    Product(name: "Onion", price: 18, icon: Icons.ac_unit),
-    Product(name: "Milk", price: 50, icon: Icons.local_drink),
-    Product(name: "Eggs", price: 60, icon: Icons.egg),
-    Product(name: "Bread", price: 40, icon: Icons.bakery_dining),
-    Product(name: "Butter", price: 90, icon: Icons.cookie),
-    Product(name: "Cheese", price: 120, icon: Icons.set_meal),
-    Product(name: "Rice", price: 70, icon: Icons.shopping_bag),
-    Product(name: "Flour", price: 45, icon: Icons.grain),
-    Product(name: "Sugar", price: 35, icon: Icons.cake),
-    Product(name: "Salt", price: 20, icon: Icons.spa),
-    Product(name: "Oil", price: 150, icon: Icons.local_bar),
-    Product(name: "Tea", price: 80, icon: Icons.coffee),
-    Product(name: "Coffee", price: 100, icon: Icons.coffee_maker),
-    Product(name: "Lentils", price: 110, icon: Icons.eco),
-    Product(name: "Spinach", price: 30, icon: Icons.grass),
+    Product(name: "Apple", price: 30, image: "assets/images/Apple.jpeg"),
+    Product(name: "Banana", price: 10, image: "assets/images/Banana.jpeg"),
+    Product(name: "Carrot", price: 20, image: "assets/images/Carrot.jpeg"),
+    Product(name: "Tomato", price: 25, image: "assets/images/Tomato.jpeg"),
+    Product(name: "Potato", price: 15, image: "assets/images/Potato.jpeg"),
+    Product(name: "Onion", price: 18, image: "assets/images/Onion.jpeg"),
+    Product(name: "Milk", price: 50, image: "assets/images/Milk.jpeg"),
+    Product(name: "Eggs", price: 60, image: "assets/images/Eggs.jpeg"),
+    Product(name: "Bread", price: 40, image: "assets/images/Bread.jpeg"),
+    Product(name: "Butter", price: 90, image: "assets/images/Butter.jpeg"),
+    Product(name: "Cheese", price: 120, image: "assets/images/Cheese.jpeg"),
+    Product(name: "Rice", price: 70, image: "assets/images/Rice.jpeg"),
+    Product(name: "Flour", price: 45, image: "assets/images/Flour.jpeg"),
+    Product(name: "Sugar", price: 35, image: "assets/images/Sugar.jpeg"),
+    Product(name: "Salt", price: 20, image: "assets/images/Salt.jpeg"),
+    Product(name: "Oil", price: 150, image: "assets/images/Oil.jpeg"),
+    Product(name: "Tea", price: 80, image: "assets/images/Tea.jpeg"),
+    Product(name: "Coffee", price: 100, image: "assets/images/Coffee.jpeg"),
+    Product(name: "Lentils", price: 110, image: "assets/images/Lentils.jpeg"),
+    Product(name: "Spinach", price: 30, image: "assets/images/Spinach.jpeg"),
   ];
 
   @override
@@ -190,7 +190,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(product.icon, size: 50, color: Colors.green),
+                      Image.asset(
+                        product.image,
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      ),
                       SizedBox(height: 10),
                       Text(product.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       Text("₹${product.price}", style: TextStyle(fontSize: 16)),
